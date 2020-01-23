@@ -13,26 +13,19 @@ namespace Lambda_DI_Example
 {
     public class Function
     {
-        private ServiceCollection _serviceCollection;
-        
-        public Function()
-        {
-            ConfigureService();
-        }
+        private readonly IServiceProvider _serviceProvider;
 
-        private void ConfigureService()
+        public Function(IServiceProvider serviceProvider)
         {
-            _serviceCollection = new ServiceCollection();
-            _serviceCollection.AddTransient<IMath,Math>();
+            _serviceProvider = serviceProvider;
         }
+        
+        public Function() : this(Startup.Container.BuildServiceProvider()) { }
+
 
         public string FunctionHandler(string input, ILambdaContext context)
         {
-            using (ServiceProvider serviceProvider = _serviceCollection.BuildServiceProvider())
-            {
-                // entry to run app.
-                return serviceProvider.GetService<Math>().Add(1,2).ToString();
-            }
+                return _serviceProvider.GetService<Math>().Add(1,2).ToString();
         }
     }
 }
