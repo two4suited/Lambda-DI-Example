@@ -19,13 +19,19 @@ namespace Lambda_DI_Example
         {
             _serviceProvider = serviceProvider;
         }
+
+        public Function() 
+        {
+            _serviceProvider = Startup.Container.BuildServiceProvider();
+
+        }
         
-        public Function() : this(Startup.Container.BuildServiceProvider()) { }
-
-
         public string FunctionHandler(string input, ILambdaContext context)
         {
-                return _serviceProvider.GetService<Math>().Add(1,2).ToString();
+                var customClass = _serviceProvider.GetService<ICustomClass>();
+                var msg = customClass.Message();
+                var add = customClass.Add(1, 2);
+                return msg + " " + add.ToString();
         }
     }
 }
