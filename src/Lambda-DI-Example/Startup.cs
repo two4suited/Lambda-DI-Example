@@ -2,6 +2,7 @@ using System.IO;
 using Lambda_DI_Example.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Lambda_DI_Example
 {
@@ -22,6 +23,13 @@ namespace Lambda_DI_Example
                 root.Bind(options));
                     
             services.AddScoped<ICustomClass,CustomClass>();
+
+			services.AddLogging(x =>
+            {
+                x.AddConsole();
+                x.AddAWSProvider();
+                x.SetMinimumLevel(LogLevel.Information);
+            });
            
             return services;
         
